@@ -6,7 +6,7 @@ const {
   updateContact,
 } = require("../models/contacts");
 
-const addSchema = require("../middlewares/validation");
+const addSchema = require("../schemas/contactsValidation");
 
 const getAll = async (req, res, next) => {
   try {
