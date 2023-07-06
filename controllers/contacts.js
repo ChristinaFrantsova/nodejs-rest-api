@@ -6,6 +6,8 @@ const {
   updateContact,
 } = require("../models/contacts");
 
+const { HttpError } = require("../helpers");
+
 const addSchema = require("../schemas/contactsValidation");
 
 const getAll = async (req, res, next) => {
@@ -13,22 +15,25 @@ const getAll = async (req, res, next) => {
     const contacts = await listContacts();
     res.status(200).json(contacts);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    // res.status(500).json({ message: "Server error" });
+    next(error);
   }
 };
 
 const getById = async (req, res, next) => {
-  console.log(req.params);
+  //   console.log(req.params);
   try {
     const { contactId } = req.params;
     const contactById = await getContactById(contactId);
 
     if (!contactById) {
-      return res.status(404).json({ message: "Not found" });
+      throw HttpError(404, "Not found");
+      //   return res.status(404).json({ message: "Not found" });
     }
     res.status(200).json(contactById);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
+    // next(error);
   }
 };
 
