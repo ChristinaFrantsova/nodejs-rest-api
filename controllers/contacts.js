@@ -18,7 +18,6 @@ const getAll = async (req, res, next) => {
 };
 
 const getById = async (req, res, next) => {
-  //   console.log(req.params);
   try {
     const { contactId } = req.params;
     const contactById = await getContactById(contactId);
@@ -34,12 +33,6 @@ const getById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   try {
-    // const { error } = addSchema.validate(req.body);
-    // console.log(error.details);
-    // if (error) {
-    //   const labelName = error.details[0].context.label;
-    //   throw HttpError(400, `Missing required ${labelName} field`);
-    // }
     const newContact = await addContact(req.body);
     res.status(201).json(newContact);
   } catch (error) {
@@ -62,10 +55,6 @@ const remove = async (req, res, next) => {
 
 const updateById = async (req, res, next) => {
   try {
-    // const { error } = addSchema.validate(req.body);
-    // if (error) {
-    //   throw HttpError(400, error.message);
-    // }
     const { contactId } = req.params;
     const updatedContact = await updateContact(contactId, req.body);
 
