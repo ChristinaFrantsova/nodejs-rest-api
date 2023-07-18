@@ -1,4 +1,3 @@
-// mongoDB Atlas user Pas: grFbBT4IqBUxc4WF;
 const mongoose = require("mongoose");
 
 const app = require("./app");
