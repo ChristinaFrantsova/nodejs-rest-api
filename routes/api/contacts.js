@@ -14,7 +14,7 @@ const {
   isValidId,
   validateFavorite,
 } = require("../../middlewares");
-const schemas = require("../../models/contact");
+const { schemas } = require("../../models/contact");
 
 router.get("/", getAll);
 
