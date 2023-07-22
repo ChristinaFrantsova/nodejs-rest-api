@@ -1,4 +1,4 @@
-// const { HttpError } = require("../helpers");
+const { HttpError } = require("../helpers");
 
 const validateFavorite = (schema) => {
   const func = (req, res, next) => {
@@ -7,6 +7,10 @@ const validateFavorite = (schema) => {
       return;
     }
     const { error } = schema.validate(req.body);
+    if (error) {
+      const labelName = error.details[0].context.label;
+      next(HttpError(400, `Missing required ${labelName} field`));
+    }
     res.status(200);
     next();
   };
