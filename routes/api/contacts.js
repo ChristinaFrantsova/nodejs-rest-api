@@ -6,19 +6,38 @@ const {
   add,
   remove,
   updateById,
+  updateFavorite,
 } = require("../../controllers/contacts");
 
-const { validateBody } = require("../../middlewares");
-const addSchema = require("../../schemas/contactsSchema");
+const {
+  validateBody,
+  isValidId,
+  validateFavorite,
+} = require("../../middlewares");
+const { schemas } = require("../../models/contact");
 
 router.get("/", getAll);
 
-router.get("/:contactId", getById);
+router.get("/:contactId", isValidId, getById);
+// не шукає по id
 
-router.post("/", validateBody(addSchema), add);
+router.post("/", validateBody(schemas.addSchema), add);
+// не працює додавання разом з Joi схемою
 
-router.delete("/:contactId", remove);
+router.delete("/:contactId", isValidId, remove);
 
-router.put("/:contactId", validateBody(addSchema), updateById);
+router.put(
+  "/:contactId",
+  isValidId,
+  validateBody(schemas.addSchema),
+  updateById
+);
+
+router.patch(
+  "/:contactId/favorite",
+  isValidId,
+  validateFavorite(schemas.updateFavoriteSchema),
+  updateFavorite
+);
 
 module.exports = router;
