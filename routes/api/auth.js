@@ -1,9 +1,9 @@
 const express = require("express");
 
-const { validateBody } = require("../../middlewares");
+const { validateBody, authenticate } = require("../../middlewares");
 const { schemas } = require("../../models/user");
 
-const { register, login } = require("../../controllers/auth");
+const { register, login, getCurrent } = require("../../controllers/auth");
 
 const router = express.Router();
 
@@ -12,5 +12,8 @@ router.post("/register", validateBody(schemas.registerSchema), register);
 
 // sing in
 router.post("/login", validateBody(schemas.loginSchema), login);
+
+//
+router.get("/current", authenticate, getCurrent);
 
 module.exports = router;
