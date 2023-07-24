@@ -1,10 +1,18 @@
 const { Contact } = require("../models/contact");
 
 const { HttpError } = require("../helpers");
+const { populate } = require("dotenv");
 
 const getAll = async (req, res, next) => {
   try {
-    const contacts = await Contact.find({}, "-createdAt -updatedAt");
+    const { _id: owner } = req.user;
+    const { page = 1, limit = 20, favorite = true } = req.query;
+    const skip = (page - 1) * limit;
+    const contacts = await Contact.find({ owner }, "-createdAt -updatedAt", {
+      skip,
+      limit,
+      favorite,
+    }).populate("owner", "email");
     res.status(200).json(contacts);
   } catch (error) {
     next(error);
@@ -28,7 +36,8 @@ const getById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   try {
-    const newContact = await Contact.create(req.body);
+    const { _id: owner } = req.user;
+    const newContact = await Contact.create({ ...req.body, owner });
     res.status(201).json(newContact);
   } catch (error) {
     next(error);
