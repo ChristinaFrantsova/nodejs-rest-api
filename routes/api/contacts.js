@@ -13,21 +13,23 @@ const {
   validateBody,
   isValidId,
   validateFavorite,
+  authenticate,
 } = require("../../middlewares");
 const { schemas } = require("../../models/contact");
 
-router.get("/", getAll);
+router.get("/", authenticate, getAll);
 
-router.get("/:contactId", isValidId, getById);
+router.get("/:contactId", authenticate, isValidId, getById);
 // не шукає по id
 
-router.post("/", validateBody(schemas.addSchema), add);
+router.post("/", authenticate, validateBody(schemas.addSchema), add);
 // не працює додавання разом з Joi схемою
 
-router.delete("/:contactId", isValidId, remove);
+router.delete("/:contactId", authenticate, isValidId, remove);
 
 router.put(
   "/:contactId",
+  authenticate,
   isValidId,
   validateBody(schemas.addSchema),
   updateById
@@ -35,6 +37,7 @@ router.put(
 
 router.patch(
   "/:contactId/favorite",
+  authenticate,
   isValidId,
   validateFavorite(schemas.updateFavoriteSchema),
   updateFavorite
