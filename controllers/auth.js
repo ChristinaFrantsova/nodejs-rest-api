@@ -39,7 +39,7 @@ const login = async (req, res, next) => {
 
   const payload = { id: user._id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-
+  await User.findByIdAndUpdate(user._id, { token });
   res.json({ token });
 };
 
@@ -49,8 +49,20 @@ const getCurrent = async (req, res, next) => {
   res.json({ email, subscription });
 };
 
+const logout = async (req, res, next) => {
+  const { _id } = req.user;
+
+  if (!_id) {
+    throw HttpError(401);
+  }
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.status(204).json("No Content");
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
 };
