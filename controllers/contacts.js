@@ -1,7 +1,7 @@
 const { Contact } = require("../models/contact");
 
 const { HttpError } = require("../helpers");
-const { populate } = require("dotenv");
+// const { populate } = require("dotenv");
 
 const getAll = async (req, res, next) => {
   try {
