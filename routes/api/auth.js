@@ -9,12 +9,15 @@ const {
   getCurrent,
   logout,
   updateAvatar,
+  verifyEmail,
 } = require("../../controllers/auth");
 
 const router = express.Router();
 
 // sing up
 router.post("/register", validateBody(schemas.registerSchema), register);
+
+router.get("/verify/:verificationToken", verifyEmail);
 
 // sing in
 router.post("/login", validateBody(schemas.loginSchema), login);

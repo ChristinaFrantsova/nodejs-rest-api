@@ -49,6 +49,24 @@ const register = async (req, res, next) => {
   });
 };
 
+const verifyEmail = async (req, res, next) => {
+  const { verificationToken } = req.params;
+  const user = await User.findOne({ verificationToken });
+  console.log(user);
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: "",
+  });
+
+  res.status(200).json({
+    message: "Verification successful",
+  });
+};
+
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -56,7 +74,9 @@ const login = async (req, res, next) => {
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
   }
-
+  if (!user.verify) {
+    throw HttpError(401, "Email is not verified");
+  }
   const passwordCompare = await bcryptjs.compare(password, user.password);
   if (!passwordCompare) {
     throw HttpError(401, "Email or password is wrong");
@@ -117,6 +137,7 @@ const updateAvatar = async (req, res, next) => {
 
 module.exports = {
   register: ctrlWrapper(register),
+  verifyEmail: ctrlWrapper(verifyEmail),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
